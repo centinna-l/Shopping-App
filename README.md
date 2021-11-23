@@ -14,3 +14,6 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+- API Key - AIzaSyDg1lmZtR0HNQSj0kjBNfkeILpTKdKfNv8
+- Base URL - flutter-state-management-10587-default-rtdb.firebaseio.com
