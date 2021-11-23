@@ -16,3 +16,4 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 - API Key - AIzaSyDg1lmZtR0HNQSj0kjBNfkeILpTKdKfNv8
+- Base URL - flutter-state-management-10587-default-rtdb.firebaseio.com

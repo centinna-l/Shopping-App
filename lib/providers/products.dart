@@ -73,18 +73,23 @@ class Products with ChangeNotifier {
   // }
 
   Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    print("Auth Token");
     print(authToken);
     final filterString =
         filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
-    var url = Uri.https('flutter-update.firebaseio.com',
-        '/products.json?auth=$authToken&$filterString');
+    var url = Uri.parse(
+        'https://flutter-state-management-10587-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString');
+    print("URL TO THE STRING");
+    print(url);
     try {
       final response = await http.get(url);
+      print(response.statusCode);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       if (extractedData == null) {
         return;
       }
-      url = Uri.https('flutter-update.firebaseio.com',
+      url = Uri.https(
+          'flutter-state-management-10587-default-rtdb.firebaseio.com',
           '/userFavorites/$userId.json?auth=$authToken');
       final favoriteResponse = await http.get(url);
       final favoriteData = json.decode(favoriteResponse.body);
@@ -108,9 +113,12 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    // print(authToken);
+    print("AuthToken \n");
+    print(authToken);
+    print("AuthToken \n");
     final url = Uri.https(
-        'flutter-update.firebaseio.com', '/products.json?auth=$authToken');
+        'flutter-state-management-10587-default-rtdb.firebaseio.com',
+        '/products.json?auth=$authToken');
     try {
       final response = await http.post(
         url,
@@ -122,6 +130,7 @@ class Products with ChangeNotifier {
           'creatorId': userId,
         }),
       );
+      print("Line Some thing");
       final newProduct = Product(
         title: product.title,
         description: product.description,
@@ -141,7 +150,8 @@ class Products with ChangeNotifier {
   Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      final url = Uri.https('flutter-update.firebaseio.com',
+      final url = Uri.https(
+          'flutter-state-management-10587-default-rtdb.firebaseio.com',
           '/products/$id.json?auth=$authToken');
       await http.patch(url,
           body: json.encode({
@@ -159,7 +169,8 @@ class Products with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     final url = Uri.https(
-        'flutter-update.firebaseio.com', '/products/$id.json?auth=$authToken');
+        'flutter-state-management-10587-default-rtdb.firebaseio.com',
+        '/products/$id.json?auth=$authToken');
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);

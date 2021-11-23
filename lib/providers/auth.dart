@@ -14,6 +14,8 @@ class Auth with ChangeNotifier {
   Timer _authTimer;
 
   bool get isAuth {
+    print("IS AUTH");
+    print(token != null);
     return token != null;
   }
 
@@ -21,6 +23,8 @@ class Auth with ChangeNotifier {
     if (_expiryDate != null &&
         _expiryDate.isAfter(DateTime.now()) &&
         _token != null) {
+      print("Token");
+      print(_token);
       return _token;
     }
     return null;
@@ -86,6 +90,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<bool> tryAutoLogin() async {
+    print("This is the Auto Login");
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('userData')) {
       return false;
@@ -98,6 +103,8 @@ class Auth with ChangeNotifier {
       return false;
     }
     _token = extractedUserData['token'];
+    print("___TOKEN___");
+    print(_token);
     _userId = extractedUserData['userId'];
     _expiryDate = expiryDate;
     notifyListeners();
@@ -106,6 +113,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> logout() async {
+    print("This is the  Logout");
     _token = null;
     _userId = null;
     _expiryDate = null;
@@ -120,10 +128,13 @@ class Auth with ChangeNotifier {
   }
 
   void _autoLogout() {
+    print("This is the Auto logout");
     if (_authTimer != null) {
       _authTimer.cancel();
     }
     final timeToExpiry = _expiryDate.difference(DateTime.now()).inSeconds;
     _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
+    print("AUTH TIMER");
+    print(_authTimer.isActive);
   }
 }
