@@ -14,8 +14,6 @@ class Auth with ChangeNotifier {
   Timer _authTimer;
 
   bool get isAuth {
-    print("IS AUTH");
-    print(token != null);
     return token != null;
   }
 
@@ -23,8 +21,6 @@ class Auth with ChangeNotifier {
     if (_expiryDate != null &&
         _expiryDate.isAfter(DateTime.now()) &&
         _token != null) {
-      print("Token");
-      print(_token);
       return _token;
     }
     return null;
@@ -36,9 +32,8 @@ class Auth with ChangeNotifier {
 
   Future<void> _authenticate(
       String email, String password, String urlSegment) async {
-    //identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken
-    final url = Uri.parse(
-        'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyDg1lmZtR0HNQSj0kjBNfkeILpTKdKfNv8');
+    final url =
+        'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyDg1lmZtR0HNQSj0kjBNfkeILpTKdKfNv8';
     try {
       final response = await http.post(
         url,
@@ -52,8 +47,6 @@ class Auth with ChangeNotifier {
       );
       final responseData = json.decode(response.body);
       if (responseData['error'] != null) {
-        print("ERROR Error");
-        print(responseData['error']);
         throw HttpException(responseData['error']['message']);
       }
       _token = responseData['idToken'];
@@ -90,7 +83,6 @@ class Auth with ChangeNotifier {
   }
 
   Future<bool> tryAutoLogin() async {
-    print("This is the Auto Login");
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('userData')) {
       return false;
@@ -103,8 +95,6 @@ class Auth with ChangeNotifier {
       return false;
     }
     _token = extractedUserData['token'];
-    print("___TOKEN___");
-    print(_token);
     _userId = extractedUserData['userId'];
     _expiryDate = expiryDate;
     notifyListeners();
@@ -113,7 +103,6 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> logout() async {
-    print("This is the  Logout");
     _token = null;
     _userId = null;
     _expiryDate = null;
@@ -128,13 +117,10 @@ class Auth with ChangeNotifier {
   }
 
   void _autoLogout() {
-    print("This is the Auto logout");
     if (_authTimer != null) {
       _authTimer.cancel();
     }
     final timeToExpiry = _expiryDate.difference(DateTime.now()).inSeconds;
     _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
-    print("AUTH TIMER");
-    print(_authTimer.isActive);
   }
 }
